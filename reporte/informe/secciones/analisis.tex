@@ -1,0 +1,86 @@
+\section{Análisis}
+
+La \textbf{colección canónica de conjuntos de ítems LR(0)} es la estructura central sobre la
+que se construye un analizador sintáctico ascendente determinista. Un \textit{ítem LR(0)} de
+la forma $A \to \alpha\,\bullet\,\beta$ representa un estado parcial del reconocimiento:
+$\alpha$ ya ha sido desplazado a la pila y se espera ver los símbolos de $\beta$. Cuando el
+punto $\bullet$ llega al final ($A \to \alpha\,\bullet$), el ítem indica que la regla
+$A \to \alpha$ puede reducirse. El autómata LR(0) utiliza estos ítems para tomar decisiones
+de \textit{desplazamiento} (shift) o \textit{reducción} (reduce) sin necesidad de retroceso.
+
+\subsection*{Gramática aumentada}
+
+Antes de construir la colección se \textbf{aumenta} la gramática original: se introduce un
+nuevo símbolo inicial $S'$ con la producción única $S' \to S$. Esto garantiza que el estado
+de aceptación sea único (el que contiene $S' \to S\,\bullet$) y que el símbolo inicial
+original no aparezca a la derecha de ninguna producción, lo que simplifica los algoritmos
+de reducción.
+
+\subsection*{Algoritmo de Clausura}
+
+Dado un conjunto de ítems $I$, $\mathrm{CERRADURA}(I)$ se obtiene aplicando iterativamente
+la siguiente regla hasta alcanzar el punto fijo:
+
+\begin{enumerate}
+  \item Todo ítem de $I$ pertenece a $\mathrm{CERRADURA}(I)$.
+  \item Si $A \to \alpha\,\bullet\,B\,\beta \in \mathrm{CERRADURA}(I)$ y
+        $B \to \gamma$ es una producción de la gramática,
+        entonces $B \to \bullet\,\gamma$ se incorpora a $\mathrm{CERRADURA}(I)$.
+\end{enumerate}
+
+La clausura expande el horizonte del autómata: al predecir que puede venir $B$, se agregan
+todos los modos posibles de empezar a reconocer $B$. El punto fijo se alcanza cuando no se
+puede añadir ningún ítem nuevo.
+
+\subsection*{Algoritmo Ir\_a}
+
+La función $\mathrm{IR\_A}(I, X)$, donde $I$ es un conjunto de ítems y $X$ un símbolo
+gramatical, calcula el estado destino al consumir $X$ desde $I$:
+
+\begin{enumerate}
+  \item Se forma $J = \{\,A \to \alpha\,X\,\bullet\,\beta \mid
+        A \to \alpha\,\bullet\,X\,\beta \in \mathrm{CERRADURA}(I)\,\}$.
+  \item El resultado es $\mathrm{CERRADURA}(J)$.
+\end{enumerate}
+
+$\mathrm{IR\_A}$ modela la transición del autómata al leer $X$: avanza el punto en todos los
+ítems que esperaban $X$ y clausura el resultado para capturar las nuevas predicciones.
+
+\subsection*{Construcción de la colección canónica}
+
+\begin{enumerate}
+  \item El estado inicial es $I_0 = \mathrm{CERRADURA}(\{S' \to \bullet\,S\})$.
+  \item Para cada estado $I_k$ de la colección y cada símbolo $X$ tal que
+        $\mathrm{IR\_A}(I_k, X) \neq \emptyset$:
+        \begin{itemize}
+          \item Si el estado resultante no existe aún, se añade a la colección y se
+                registra la transición $I_k \xrightarrow{X} I_\text{nuevo}$.
+          \item Si ya existe, solo se registra la transición.
+        \end{itemize}
+  \item Se repite hasta que no se generen estados nuevos.
+  \item El estado que contiene $S' \to S\,\bullet$ es el estado de \textbf{aceptación}.
+\end{enumerate}
+
+\subsection*{Detección de conflictos}
+
+Un autómata LR(0) puede presentar dos tipos de conflictos:
+
+\begin{itemize}
+  \item \textbf{Conflicto desplazamiento/reducción}: un estado contiene tanto un ítem con
+        el punto antes de un terminal (desplazar) como un ítem con el punto al final
+        (reducir).
+  \item \textbf{Conflicto reducción/reducción}: un estado contiene dos o más ítems con el
+        punto al final, correspondientes a producciones distintas.
+\end{itemize}
+
+Una gramática libre de conflictos LR(0) produce tablas de análisis completamente
+deterministas. Para gramáticas con conflictos se requieren técnicas más potentes como
+SLR(1), LALR(1) o LR(1), que incorporan información de lookahead.
+
+\vspace{0.8cm}
+
+El sistema implementa los tres algoritmos en Python mediante una arquitectura modular
+organizada en tres capas: \textit{modelos}, \textit{persistencia} y \textit{presentación}.
+La capa de modelos define las estructuras de datos inmutables; la capa de persistencia
+agrupa el lector de gramáticas y los algoritmos de clausura, ir\_a y construcción de la
+colección; y la capa de presentación contiene la interfaz gráfica construida con Tkinter.

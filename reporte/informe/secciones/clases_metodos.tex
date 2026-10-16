@@ -1,0 +1,180 @@
+\section{Clases y métodos implementados por cada subequipo}
+
+\textbf{Cortez Vega y Lujan De la Rosa:}
+
+\begin{enumerate}
+  \item \textbf{Módulo Algoritmos LR(0)} (\texttt{algoritmos\_lr0.py}):
+
+    \begin{enumerate}[label=\alph*.]
+      \item \textbf{\texttt{closure(grammar, items)}} $\to$ \texttt{frozenset[LR0Item]}:
+        calcula la clausura de un conjunto de ítems mediante iteración de punto fijo.
+        Para cada ítem cuyo punto precede a un no terminal $B$, recorre todas las
+        producciones de $B$ en \texttt{grammar.productions} y agrega los ítems
+        $B \to \bullet\,\gamma$ que aún no estén en el conjunto resultado.
+        El ciclo continúa hasta que ningún ítem nuevo se incorpore.
+
+      \item \textbf{\texttt{goto(grammar, items, symbol)}} $\to$ \texttt{frozenset[LR0Item]}:
+        calcula el estado destino al leer \texttt{symbol} desde \texttt{items}.
+        Primero aplica \texttt{closure} al conjunto recibido; luego selecciona los ítems
+        cuyo punto precede exactamente a \texttt{symbol}, avanza el punto con
+        \texttt{item.advance()} y aplica clausura al resultado.
+        Si no hay ítems que puedan leer \texttt{symbol}, retorna el conjunto vacío.
+        La función también se exporta con el alias \texttt{ir\_a}.
+
+      \item \textbf{\texttt{construir\_coleccion(gramatica)}} $\to$ \texttt{CanonicalCollection}:
+        función principal que orquesta la construcción completa. Primero obtiene la
+        gramática aumentada con \texttt{gramatica.augmented()}. Inicializa $I_0$ como
+        la clausura del ítem $\{S' \to \bullet\,S\}$ y lo registra en una lista de
+        estados conocidos. Mediante un cursor BFS recorre cada estado, calcula los
+        símbolos sobre los que existe transición (todos los símbolos inmediatamente a la
+        derecha de algún punto), invoca \texttt{goto} para cada uno y, si el resultado
+        es un estado nuevo, lo añade a la colección. Cada operación queda registrada en
+        la lista \texttt{trace} como pares \textit{(nombre\_operación, descripción\_resultado)}.
+        Finalmente construye los objetos \texttt{LR0State} con su índice, ítems,
+        transiciones y la bandera \texttt{accepting} (cierto si contiene
+        $S' \to S\,\bullet$) y retorna un \texttt{CanonicalCollection}.
+
+      \item \textbf{\texttt{\_format\_items(grammar, items)}} $\to$ \texttt{str}:
+        función auxiliar privada que convierte un conjunto de ítems LR(0) a una
+        representación de cadena legible, insertando el símbolo $\bullet$ en la posición
+        correcta del cuerpo de cada producción. Usada exclusivamente para poblar la traza.
+    \end{enumerate}
+
+  \item \textbf{Módulo Fachada} (\texttt{algoritmo\_lr0.py}):
+    Re-exporta mediante \texttt{\_\_all\_\_} las funciones \texttt{cerradura} (alias de
+    \texttt{closure}), \texttt{ir\_a} (alias de \texttt{goto}), \texttt{canonical\_collection}
+    y \texttt{construir\_coleccion}. Este módulo aplica el patrón \textit{fachada} para
+    que la capa de presentación no dependa directamente de los nombres internos del módulo
+    algorítmico.
+\end{enumerate}
+
+\vspace{0.6cm}
+
+\textbf{Arias Mendoza y Vasquez Moreno:}
+
+\begin{enumerate}
+  \item \textbf{Módulo de Modelos} (\texttt{modelos\_lr0.py}):
+
+    \begin{enumerate}[label=\alph*.]
+      \item \textbf{\texttt{Production}} (\texttt{frozen=True, slots=True}):
+        \textit{dataclass} con atributos \texttt{left: str} (cabeza de la producción) y
+        \texttt{right: tuple[str, ...]} (cuerpo). El método \texttt{\_\_post\_init\_\_}
+        valida que ni \texttt{left} ni ningún elemento de \texttt{right} sea vacío o
+        contenga solo espacios, lanzando \texttt{GrammarError} en caso contrario.
+        El método \texttt{\_\_str\_\_} retorna la producción formateada con flecha o con
+        $\varepsilon$ cuando \texttt{right} es la tupla vacía.
+
+      \item \textbf{\texttt{Grammar}} (\texttt{frozen=True, slots=True}):
+        agrupa \texttt{start\_symbol: str}, \texttt{terminals: frozenset[str]},
+        \texttt{nonterminals: frozenset[str]} y \texttt{productions: tuple[Production, ...]}.
+        \texttt{\_\_post\_init\_\_} verifica seis invariantes: el símbolo inicial es un
+        no terminal, terminales y no terminales son disjuntos, existe al menos una
+        producción, todas las cabezas de producción son no terminales, y todos los
+        símbolos del cuerpo de alguna producción están declarados.
+        El método de clase \texttt{create()} normaliza espacios en blanco antes de
+        construir los \texttt{frozenset}.
+        El método \texttt{augmented()} genera la gramática aumentada: crea un nombre
+        único para $S'$ (añadiendo apóstrofes mientras el nombre colisione con algún
+        símbolo existente) y antepone la producción $S' \to S$ a las producciones
+        originales.
+
+      \item \textbf{\texttt{LR0Item}} (\texttt{frozen=True, order=True, slots=True}):
+        par \texttt{(production\_index: int, dot: int = 0)} donde \texttt{dot} indica
+        la posición del punto. \texttt{order=True} habilita comparación total para
+        poder ordenar los ítems al formatear la traza.
+        \texttt{advance()} retorna un nuevo \texttt{LR0Item} con \texttt{dot + 1},
+        sin modificar el objeto original (inmutabilidad garantizada por \texttt{frozen}).
+
+      \item \textbf{\texttt{LR0State}} (\texttt{frozen=True, slots=True}):
+        representa un estado del autómata con \texttt{index: int},
+        \texttt{items: frozenset[LR0Item]},
+        \texttt{transitions: Mapping[str, int]} (diccionario símbolo $\to$ índice de
+        estado destino) y \texttt{accepting: bool}.
+        Las propiedades \texttt{transiciones} y \texttt{es\_aceptacion} son alias en
+        español para compatibilidad con la capa de presentación.
+
+      \item \textbf{\texttt{CanonicalCollection}} (\texttt{frozen=True, slots=True}):
+        contenedor del resultado final con \texttt{estados: tuple[LR0State, ...]},
+        \texttt{grammar: Grammar} (ya aumentada) y
+        \texttt{trace: tuple[tuple[str, str], ...]} (lista de pares operación/resultado
+        generada por \texttt{construir\_coleccion}).
+        La propiedad \texttt{gramatica} es alias de \texttt{grammar}.
+    \end{enumerate}
+
+  \item \textbf{Módulo Lector de Gramática} (\texttt{lector\_gramatica.py}):
+
+    \begin{enumerate}[label=\alph*.]
+      \item \textbf{\texttt{read\_grammar\_text(text)}} $\to$ \texttt{Grammar}:
+        parsea una cadena de texto con la gramática. Recorre las líneas ignorando
+        comentarios (\texttt{\#}) y líneas vacías. Detecta automáticamente el formato:
+        \textit{etiquetado} (con directivas \texttt{inicio:}, \texttt{terminales:},
+        \texttt{no\_terminales:} y \texttt{producciones:}) o
+        \textit{posicional} (primeras dos líneas contienen no terminales y terminales
+        respectivamente; el símbolo inicial se infiere como el primer no terminal).
+        Para el cuerpo de cada alternativa usa \texttt{\_compact\_tokens} que, cuando
+        no hay espacios, intenta separar los símbolos por coincidencia greedy más larga,
+        lo que permite cuerpos compactos. Lanza \texttt{GrammarFormatError} ante cualquier
+        malformación.
+
+      \item \textbf{\texttt{cargar\_gramatica\_desde\_archivo(ruta)}} $\to$ \texttt{Grammar}:
+        recibe una ruta de archivo (\texttt{str} o \texttt{Path}), lee su contenido en
+        UTF-8 y delega en \texttt{read\_grammar\_text}. Propaga
+        \texttt{GrammarFormatError} en caso de error de E/S o de formato.
+    \end{enumerate}
+\end{enumerate}
+
+\vspace{0.6cm}
+
+\newpage
+
+\textbf{Carrasco Pacheco y Nicolas Vasquez:}
+
+\begin{enumerate}
+  \item \textbf{Módulo de Estilos} (\texttt{estilos.py}):
+    Define el diccionario \texttt{COLORES} con la paleta completa del proyecto.
+    \texttt{configurar\_estilos(ventana)} recibe la ventana raíz y aplica los temas
+    \texttt{ttk} globalmente: botón estándar (\texttt{TButton}), botón de acción
+    principal (\texttt{Accent.TButton} con color primario y fuente en negrita),
+    tabla (\texttt{Treeview} con encabezados resaltados), y pestañas
+    (\texttt{TNotebook.Tab} con estado activo/inactivo diferenciado).
+    \texttt{crear\_superficie(padre)} $\to$ \texttt{tk.Frame}: función de fábrica
+    que retorna un \texttt{Frame} con borde uniforme (\texttt{highlightthickness=1})
+    y fondo de superficie, usado como contenedor visual en todas las secciones.
+
+  \item \textbf{Módulo Tabla de Estados} (\texttt{tabla\_estados.py}):
+    Implementa la clase \texttt{TablaEstados(tk.Frame)} para visualizar la colección
+    canónica. Recibe la lista de \texttt{estados} y la \texttt{gramatica} aumentada en
+    su constructor. En \texttt{\_crear()} construye un encabezado con el número total
+    de estados, y a continuación usa un \texttt{Canvas} con barra de scroll vertical
+    para mostrar cada estado en su propio marco: el título \texttt{I\textit{k}} (en
+    verde y con la etiqueta «ACEPTACIÓN» si \texttt{es\_aceptacion} es verdadero),
+    los ítems LR(0) formateados con el punto $\bullet$ en fuente monoespaciada, y la
+    línea de transiciones en la forma \texttt{símbolo -> I\textit{n}}. Permite navegar
+    colecciones con decenas de estados sin desbordar la ventana.
+
+  \item \textbf{Módulo Ventana de Resultados} (\texttt{ventana\_resultados.py}):
+    Define \texttt{VentanaResultados(tk.Toplevel)}, ventana secundaria de 1180$\times$760 px
+    con un \texttt{Treeview} de dos columnas: \textit{Operación} (390 px) y
+    \textit{Resultado} (700 px). Cada fila corresponde a un paso de la traza generada
+    por \texttt{construir\_coleccion}: apertura de estados (\texttt{cerradura(...)}),
+    transiciones (\texttt{Ir\_a(I\textit{k}, X)}) y contenido de cada estado.
+    Incluye barras de desplazamiento vertical y horizontal para trazar colecciones de
+    decenas de estados.
+
+  \item \textbf{Módulo Interfaz Principal} (\texttt{interfaz.py}):
+    Implementa \texttt{InterfazColeccion(tk.Tk)}, punto de entrada de la aplicación:
+    \begin{itemize}
+      \item \textbf{\texttt{abrir\_archivo()}}: abre un diálogo de selección de archivo
+            \texttt{.txt}, llama a \texttt{cargar\_gramatica\_desde\_archivo} y captura
+            \texttt{OSError}, \texttt{UnicodeError} y \texttt{ValueError} mostrando
+            el mensaje de error en un cuadro de diálogo.
+      \item \textbf{\texttt{\_mostrar\_gramatica()}}: vuelca el contenido crudo del
+            archivo en el editor de solo lectura para que el usuario pueda inspeccionarlo.
+      \item \textbf{\texttt{analizar()}}: verifica que haya gramática cargada, invoca
+            \texttt{construir\_coleccion}, destruye la ventana de resultados anterior si
+            existe y abre una nueva \texttt{VentanaResultados}. Actualiza la barra de
+            estado con el número de estados LR(0) generados.
+      \item \textbf{\texttt{limpiar()}}: restablece todos los atributos de estado y
+            limpia el editor de texto.
+    \end{itemize}
+\end{enumerate}

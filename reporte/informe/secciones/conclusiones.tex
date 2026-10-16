@@ -1,0 +1,48 @@
+\section{Conclusiones}
+
+\setlength{\parindent}{1.5cm}
+
+\indent El desarrollo del presente proyecto permitió al equipo comprender de manera rigurosa y
+práctica el papel que desempeña la \textbf{colección canónica de conjuntos de ítems LR(0)}
+en la construcción de analizadores sintácticos ascendentes. A diferencia del análisis
+predictivo descendente LL(1) \textemdash{}estudiado en la asignación anterior mediante los
+conjuntos \textsc{Primero} y \textsc{Siguiente}\textemdash{} el análisis LR(0) no necesita
+predecir la producción a aplicar: en cambio, acumula información en la pila a medida que
+desplaza símbolos de la entrada y decide reducir cuando el estado activo contiene un ítem
+completo. La colección canónica es precisamente el catálogo exhaustivo de todos los estados
+posibles de ese proceso.
+
+\indent La implementación de los algoritmos de clausura e ir\_a puso de manifiesto la
+naturaleza composicional del autómata LR(0): \texttt{closure} expande horizontalmente un
+conjunto de ítems capturando todas las predicciones posibles para un no terminal, mientras
+que \texttt{goto} desplaza el punto a través de un símbolo y vuelve a clausurar, generando
+un nuevo estado. La correcta composición iterativa de ambas funciones en
+\texttt{construir\_coleccion} garantiza que la colección sea mínima (sin estados duplicados)
+y completa (cubre todos los prefijos viables). El uso de \texttt{frozenset} como
+representación canónica de cada estado fue clave para detectar estados ya conocidos en
+tiempo constante.
+
+\indent El diseño en tres capas \textemdash{}modelos, persistencia y
+presentación\textemdash{} demostró su valor durante la integración: cada sub equipo pudo
+desarrollar y verificar su módulo de forma autónoma antes de conectarlo con los demás, ya
+que las interfaces entre capas estaban definidas por las \textit{dataclasses} inmutables.
+El patrón fachada aplicado en \texttt{algoritmo\_lr0.py} simplificó la capa de presentación
+al exponer solo las funciones relevantes y ocultar los detalles internos del módulo
+algorítmico.
+
+\indent El sistema de traza detallada incorporado en \texttt{construir\_coleccion} resultó
+especialmente valioso en el contexto educativo: al registrar cada llamada a \texttt{closure}
+e \texttt{ir\_a} con su resultado, el usuario puede seguir paso a paso la construcción del
+autómata y confrontarla con los cálculos manuales realizados en clase. Esta característica
+convierte la herramienta en un instrumento de verificación, no solo de cómputo.
+
+\indent Como perspectiva futura, la arquitectura del sistema facilita la extensión hacia
+técnicas más potentes: los conjuntos \textsc{Siguiente} \textemdash{}calculados en la
+asignación anterior\textemdash{} pueden incorporarse directamente para construir tablas
+SLR(1), y con la adición de lookaheads por ítem se puede escalar a LALR(1) o LR(1). La
+modularidad ya establecida minimizaría el esfuerzo de esas extensiones.
+
+\indent En síntesis, el proyecto consolidó la comprensión de la fase ascendente del diseño
+de compiladores y reforzó buenas prácticas de ingeniería de software \textemdash{}estructuras
+inmutables, separación de responsabilidades y pruebas incrementales\textemdash{} que serán
+aplicadas en las etapas subsecuentes del curso.

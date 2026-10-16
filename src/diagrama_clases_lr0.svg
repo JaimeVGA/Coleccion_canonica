@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1880" height="1340" viewBox="0 0 1880 1340" font-family="DejaVu Sans, Helvetica, Arial, sans-serif">
+<defs><marker id="open" viewBox="0 0 14 14" refX="13" refY="7" markerWidth="14" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto"><path d="M1,1 L13,7 L1,13" fill="none" stroke="#111" stroke-width="2" stroke-dasharray="none"/></marker></defs>
+<rect width="1880" height="1340" fill="#ffffff"/>
+<text x="40" y="36" font-size="20" font-weight="bold" fill="#1e1b3a">Diagrama de clases — Colección canónica LR(0)</text>
+<rect x="44" y="64" width="520" height="218" fill="#000" opacity="0.08"/>
+<rect x="40" y="60" width="520" height="218" fill="#f5f3ff" stroke="#a78bfa" stroke-width="2.5"/>
+<text x="300.0" y="88" font-size="14" text-anchor="middle" fill="#1e1b3a">«módulo · fachada»</text>
+<text x="300.0" y="116" font-size="17" font-weight="bold" text-anchor="middle" fill="#1e1b3a">AlgoritmoLR0</text>
+<line x1="40" y1="138" x2="560" y2="138" stroke="#a78bfa" stroke-width="2.5"/>
+<line x1="40" y1="172" x2="560" y2="172" stroke="#a78bfa" stroke-width="2.5"/>
+<text x="56" y="196" font-size="14" fill="#222" xml:space="preserve">+cerradura(grammar, items) : frozenset[LR0Item]</text>
+<text x="56" y="218" font-size="14" fill="#222" xml:space="preserve">+ir_a(grammar, items, symbol) : frozenset[LR0Item]</text>
+<text x="56" y="240" font-size="14" fill="#222" xml:space="preserve">+construir_coleccion(gramatica) : CanonicalCollection</text>
+<text x="56" y="262" font-size="14" fill="#222" xml:space="preserve">+canonical_collection(grammar) : tuple</text>
+<rect x="44" y="374" width="520" height="306" fill="#000" opacity="0.08"/>
+<rect x="40" y="370" width="520" height="306" fill="#fef2f2" stroke="#f87171" stroke-width="2.5"/>
+<text x="300.0" y="398" font-size="14" text-anchor="middle" fill="#1e1b3a">«módulo»</text>
+<text x="300.0" y="426" font-size="17" font-weight="bold" text-anchor="middle" fill="#1e1b3a">AlgoritmosLR0</text>
+<line x1="40" y1="448" x2="560" y2="448" stroke="#f87171" stroke-width="2.5"/>
+<line x1="40" y1="482" x2="560" y2="482" stroke="#f87171" stroke-width="2.5"/>
+<text x="56" y="506" font-size="14" fill="#222" xml:space="preserve">+closure(grammar, items) : frozenset[LR0Item]</text>
+<text x="56" y="528" font-size="14" fill="#222" xml:space="preserve">+goto(grammar, items, symbol) : frozenset[LR0Item]</text>
+<text x="56" y="550" font-size="14" fill="#222" xml:space="preserve">+ir_a = goto</text>
+<text x="56" y="572" font-size="14" fill="#222" xml:space="preserve">+canonical_collection(grammar) : tuple</text>
+<text x="56" y="594" font-size="14" fill="#222" xml:space="preserve">+construir_coleccion(gramatica) : CanonicalCollection</text>
+<text x="56" y="616" font-size="14" fill="#222" xml:space="preserve">-_canonical_collection(grammar) : tuple</text>
+<text x="56" y="638" font-size="14" fill="#222" xml:space="preserve">-_ordered_symbols(grammar, symbols) : list[str]</text>
+<text x="56" y="660" font-size="14" fill="#222" xml:space="preserve">-_format_items(grammar, items) : str</text>
+<rect x="704" y="64" width="470" height="178" fill="#000" opacity="0.08"/>
+<rect x="700" y="60" width="470" height="178" fill="#f7fee7" stroke="#a3e635" stroke-width="2.5"/>
+<text x="935.0" y="94" font-size="17" font-weight="bold" text-anchor="middle" fill="#1e1b3a">CanonicalCollection</text>
+<line x1="700" y1="114" x2="1170" y2="114" stroke="#a3e635" stroke-width="2.5"/>
+<text x="716" y="138" font-size="14" fill="#222">+estados : tuple[LR0State, ...]</text>
+<text x="716" y="160" font-size="14" fill="#222">+grammar : Grammar</text>
+<text x="716" y="182" font-size="14" fill="#222">+trace : tuple[tuple[str, str], ...]</text>
+<line x1="700" y1="198" x2="1170" y2="198" stroke="#a3e635" stroke-width="2.5"/>
+<text x="716" y="222" font-size="14" fill="#222" xml:space="preserve">+gramatica : Grammar  «property»</text>
+<rect x="704" y="344" width="470" height="222" fill="#000" opacity="0.08"/>
+<rect x="700" y="340" width="470" height="222" fill="#ecfeff" stroke="#22d3ee" stroke-width="2.5"/>
+<text x="935.0" y="374" font-size="17" font-weight="bold" text-anchor="middle" fill="#1e1b3a">LR0State</text>
+<line x1="700" y1="394" x2="1170" y2="394" stroke="#22d3ee" stroke-width="2.5"/>
+<text x="716" y="418" font-size="14" fill="#222">+index : int</text>
+<text x="716" y="440" font-size="14" fill="#222">+items : frozenset[LR0Item]</text>
+<text x="716" y="462" font-size="14" fill="#222">+transitions : Mapping[str, int]</text>
+<text x="716" y="484" font-size="14" fill="#222">+accepting : bool = False</text>
+<line x1="700" y1="500" x2="1170" y2="500" stroke="#22d3ee" stroke-width="2.5"/>
+<text x="716" y="524" font-size="14" fill="#222" xml:space="preserve">+transiciones : Mapping[str, int]  «property»</text>
+<text x="716" y="546" font-size="14" fill="#222" xml:space="preserve">+es_aceptacion : bool  «property»</text>
+<rect x="704" y="684" width="470" height="156" fill="#000" opacity="0.08"/>
+<rect x="700" y="680" width="470" height="156" fill="#fefce8" stroke="#facc15" stroke-width="2.5"/>
+<text x="935.0" y="714" font-size="17" font-weight="bold" text-anchor="middle" fill="#1e1b3a">LR0Item</text>
+<line x1="700" y1="734" x2="1170" y2="734" stroke="#facc15" stroke-width="2.5"/>
+<text x="716" y="758" font-size="14" fill="#222">+production_index : int</text>
+<text x="716" y="780" font-size="14" fill="#222">+dot : int = 0</text>
+<line x1="700" y1="796" x2="1170" y2="796" stroke="#facc15" stroke-width="2.5"/>
+<text x="716" y="820" font-size="14" fill="#222" xml:space="preserve">+advance() : LR0Item</text>
+<rect x="1304" y="64" width="520" height="266" fill="#000" opacity="0.08"/>
+<rect x="1300" y="60" width="520" height="266" fill="#fff4e6" stroke="#fb923c" stroke-width="2.5"/>
+<text x="1560.0" y="94" font-size="17" font-weight="bold" text-anchor="middle" fill="#1e1b3a">Grammar</text>
+<line x1="1300" y1="114" x2="1820" y2="114" stroke="#fb923c" stroke-width="2.5"/>
+<text x="1316" y="138" font-size="14" fill="#222">+start_symbol : str</text>
+<text x="1316" y="160" font-size="14" fill="#222">+terminals : frozenset[str]</text>
+<text x="1316" y="182" font-size="14" fill="#222">+nonterminals : frozenset[str]</text>
+<text x="1316" y="204" font-size="14" fill="#222">+productions : tuple[Production, ...]</text>
+<line x1="1300" y1="220" x2="1820" y2="220" stroke="#fb923c" stroke-width="2.5"/>
+<text x="1316" y="244" font-size="14" fill="#222" xml:space="preserve">+create(start_symbol, terminals,</text>
+<text x="1316" y="266" font-size="14" fill="#222" xml:space="preserve">      nonterminals, productions) : Grammar</text>
+<text x="1316" y="288" font-size="14" fill="#222" xml:space="preserve">+augmented() : Grammar</text>
+<text x="1316" y="310" font-size="14" fill="#222" xml:space="preserve">+__post_init__() : None</text>
+<rect x="1304" y="424" width="520" height="178" fill="#000" opacity="0.08"/>
+<rect x="1300" y="420" width="520" height="178" fill="#eff6ff" stroke="#60a5fa" stroke-width="2.5"/>
+<text x="1560.0" y="454" font-size="17" font-weight="bold" text-anchor="middle" fill="#1e1b3a">Production</text>
+<line x1="1300" y1="474" x2="1820" y2="474" stroke="#60a5fa" stroke-width="2.5"/>
+<text x="1316" y="498" font-size="14" fill="#222">+left : str</text>
+<text x="1316" y="520" font-size="14" fill="#222">+right : tuple[str, ...]</text>
+<line x1="1300" y1="536" x2="1820" y2="536" stroke="#60a5fa" stroke-width="2.5"/>
+<text x="1316" y="560" font-size="14" fill="#222" xml:space="preserve">+__post_init__() : None</text>
+<text x="1316" y="582" font-size="14" fill="#222" xml:space="preserve">+__str__() : str</text>
+<rect x="1304" y="704" width="520" height="290" fill="#000" opacity="0.08"/>
+<rect x="1300" y="700" width="520" height="290" fill="#fdf2f8" stroke="#f472b6" stroke-width="2.5"/>
+<text x="1560.0" y="728" font-size="14" text-anchor="middle" fill="#1e1b3a">«módulo»</text>
+<text x="1560.0" y="756" font-size="17" font-weight="bold" text-anchor="middle" fill="#1e1b3a">LectorGramatica</text>
+<line x1="1300" y1="778" x2="1820" y2="778" stroke="#f472b6" stroke-width="2.5"/>
+<text x="1316" y="802" font-size="14" fill="#222">-_ARROW : re.Pattern</text>
+<text x="1316" y="824" font-size="14" fill="#222">-_LABELS : dict[str, str]</text>
+<line x1="1300" y1="840" x2="1820" y2="840" stroke="#f472b6" stroke-width="2.5"/>
+<text x="1316" y="864" font-size="14" fill="#222" xml:space="preserve">+cargar_gramatica_desde_archivo(ruta) : Grammar</text>
+<text x="1316" y="886" font-size="14" fill="#222" xml:space="preserve">+read_grammar(source) : Grammar</text>
+<text x="1316" y="908" font-size="14" fill="#222" xml:space="preserve">+read_grammar_text(text) : Grammar</text>
+<text x="1316" y="930" font-size="14" fill="#222" xml:space="preserve">-_tokens(value) : list[str]</text>
+<text x="1316" y="952" font-size="14" fill="#222" xml:space="preserve">-_compact_tokens(value, symbols) : list[str]</text>
+<text x="1316" y="974" font-size="14" fill="#222" xml:space="preserve">-_label(line) : tuple[str, str] | None</text>
+<rect x="704" y="1004" width="470" height="146" fill="#000" opacity="0.08"/>
+<rect x="700" y="1000" width="470" height="146" fill="#f8fafc" stroke="#94a3b8" stroke-width="2.5"/>
+<text x="935.0" y="1028" font-size="14" text-anchor="middle" fill="#1e1b3a">«excepción · ValueError»</text>
+<text x="935.0" y="1056" font-size="17" font-weight="bold" text-anchor="middle" fill="#1e1b3a">GrammarError</text>
+<line x1="700" y1="1078" x2="1170" y2="1078" stroke="#94a3b8" stroke-width="2.5"/>
+<line x1="700" y1="1112" x2="1170" y2="1112" stroke="#94a3b8" stroke-width="2.5"/>
+<rect x="1304" y="1114" width="520" height="146" fill="#000" opacity="0.08"/>
+<rect x="1300" y="1110" width="520" height="146" fill="#f0fdfa" stroke="#2dd4bf" stroke-width="2.5"/>
+<text x="1560.0" y="1138" font-size="14" text-anchor="middle" fill="#1e1b3a">«excepción · ValueError»</text>
+<text x="1560.0" y="1166" font-size="17" font-weight="bold" text-anchor="middle" fill="#1e1b3a">GrammarFormatError</text>
+<line x1="1300" y1="1188" x2="1820" y2="1188" stroke="#2dd4bf" stroke-width="2.5"/>
+<line x1="1300" y1="1222" x2="1820" y2="1222" stroke="#2dd4bf" stroke-width="2.5"/>
+<path d="M300.0,278 L300.0,370" fill="none" stroke="#111" stroke-dasharray="2 7" stroke-linecap="round" stroke-width="3" marker-end="url(#open)"/>
+<rect x="259.8" y="313.0" width="80.39999999999999" height="22" fill="#fff"/>
+<text x="300.0" y="329.0" font-size="14" text-anchor="middle" fill="#111">reexporta</text>
+<path d="M560,400 L620,400 L620,48 L1560.0,48 L1560.0,60" fill="none" stroke="#111" stroke-dasharray="2 7" stroke-linecap="round" stroke-width="3" marker-end="url(#open)"/>
+<rect x="962.6" y="37" width="34.8" height="22" fill="#fff"/>
+<text x="980" y="53" font-size="14" text-anchor="middle" fill="#111">usa</text>
+<path d="M560,440 L645,440 L645,130 L700,130" fill="none" stroke="#111" stroke-dasharray="2 7" stroke-linecap="round" stroke-width="3" marker-end="url(#open)"/>
+<rect x="623.8" y="249" width="42.4" height="22" fill="#fff"/>
+<text x="645" y="265" font-size="14" text-anchor="middle" fill="#111">crea</text>
+<path d="M560,490 L700,490" fill="none" stroke="#111" stroke-dasharray="2 7" stroke-linecap="round" stroke-width="3" marker-end="url(#open)"/>
+<rect x="606.8" y="479" width="42.4" height="22" fill="#fff"/>
+<text x="628" y="495" font-size="14" text-anchor="middle" fill="#111">crea</text>
+<path d="M560,600 L660,600 L660,740 L700,740" fill="none" stroke="#111" stroke-dasharray="2 7" stroke-linecap="round" stroke-width="3" marker-end="url(#open)"/>
+<rect x="638.8" y="659.0" width="42.4" height="22" fill="#fff"/>
+<text x="660" y="675.0" font-size="14" text-anchor="middle" fill="#111">crea</text>
+<path d="M1170,130 L1300,130" fill="none" stroke="#111" stroke-width="2" marker-end="url(#open)"/>
+<text x="1178" y="122" font-size="13" fill="#333">1</text>
+<text x="1278" y="122" font-size="13" fill="#333">1</text>
+<rect x="1202.4" y="119" width="65.19999999999999" height="22" fill="#fff"/>
+<text x="1235.0" y="135" font-size="14" text-anchor="middle" fill="#111">grammar</text>
+<path d="M935.0,238 L935.0,340" fill="none" stroke="#111" stroke-width="2" marker-end="url(#open)"/>
+<text x="947.0" y="330" font-size="13" fill="#333">1..*</text>
+<rect x="902.4" y="278.0" width="65.19999999999999" height="22" fill="#fff"/>
+<text x="935.0" y="294.0" font-size="14" text-anchor="middle" fill="#111">estados</text>
+<path d="M935.0,562 L935.0,680" fill="none" stroke="#111" stroke-width="2" marker-end="url(#open)"/>
+<text x="947.0" y="670" font-size="13" fill="#333">1..*</text>
+<rect x="910.0" y="610.0" width="50.0" height="22" fill="#fff"/>
+<text x="935.0" y="626.0" font-size="14" text-anchor="middle" fill="#111">items</text>
+<path d="M1560.0,326 L1560.0,420" fill="none" stroke="#111" stroke-width="2" marker-end="url(#open)"/>
+<text x="1572.0" y="410" font-size="13" fill="#333">1..*</text>
+<rect x="1512.2" y="362.0" width="95.6" height="22" fill="#fff"/>
+<text x="1560.0" y="378.0" font-size="14" text-anchor="middle" fill="#111">productions</text>
+<path d="M1440.0,700 L1440.0,598" fill="none" stroke="#111" stroke-dasharray="2 7" stroke-linecap="round" stroke-width="3" marker-end="url(#open)"/>
+<rect x="1418.8" y="638.0" width="42.4" height="22" fill="#fff"/>
+<text x="1440.0" y="654.0" font-size="14" text-anchor="middle" fill="#111">crea</text>
+<path d="M1820,740 L1855,740 L1855,100 L1820,100" fill="none" stroke="#111" stroke-dasharray="2 7" stroke-linecap="round" stroke-width="3" marker-end="url(#open)"/>
+<rect x="1833.8" y="389.0" width="42.4" height="22" fill="#fff"/>
+<text x="1855" y="405.0" font-size="14" text-anchor="middle" fill="#111">crea</text>
+<path d="M1560.0,990 L1560.0,1110" fill="none" stroke="#111" stroke-dasharray="2 7" stroke-linecap="round" stroke-width="3" marker-end="url(#open)"/>
+<rect x="1535.0" y="1039.0" width="50.0" height="22" fill="#fff"/>
+<text x="1560.0" y="1055.0" font-size="14" text-anchor="middle" fill="#111">lanza</text>
+<path d="M1300,286 L1250,286 L1250,1040 L1170,1040" fill="none" stroke="#111" stroke-dasharray="2 7" stroke-linecap="round" stroke-width="3" marker-end="url(#open)"/>
+<rect x="1225.0" y="732.0" width="50.0" height="22" fill="#fff"/>
+<text x="1250" y="748.0" font-size="14" text-anchor="middle" fill="#111">lanza</text>
+<path d="M1300,480 L1220,480 L1220,1080 L1170,1080" fill="none" stroke="#111" stroke-dasharray="2 7" stroke-linecap="round" stroke-width="3" marker-end="url(#open)"/>
+<rect x="1195.0" y="979" width="50.0" height="22" fill="#fff"/>
+<text x="1220" y="995" font-size="14" text-anchor="middle" fill="#111">lanza</text>
+<text x="40" y="1316" font-size="15" fill="#444" xml:space="preserve">Notación:  + público   - privado   «módulo» = archivo con funciones (no es clase)   punteada = dependencia (usa / crea / lanza)   continua = asociación (con multiplicidad)   sin interfaz gráfica</text>
+</svg>

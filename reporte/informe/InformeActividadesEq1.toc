@@ -1,0 +1,8 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {section}{Análisis}{3}{Doc-Start}%
+\contentsline {section}{Modelo del programa principal}{5}{Item.8}%
+\contentsline {section}{Asignación de actividades}{8}{figure.1}%
+\contentsline {section}{Clases y métodos implementados por cada subequipo}{10}{table.1}%
+\contentsline {section}{Avances}{14}{Item.30}%
+\contentsline {section}{Conclusiones}{15}{table.3}%
+\contentsline {section}{Referencias}{16}{table.3}%
